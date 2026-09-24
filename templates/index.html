@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Password Security Analyzer</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+</head>
+
+<body>
+
+<header>
+    <div class="navbar">
+
+        <div class="logo">
+            Password Analyzer
+        </div>
+
+        <div class="nav-text">
+            Security Tool
+        </div>
+
+    </div>
+</header>
+
+
+<main class="container">
+
+    <section class="hero">
+
+        <h1>
+            Password Security Analyzer
+        </h1>
+
+        <p>
+            Analyze basic password security characteristics
+            without storing the password.
+        </p>
+
+    </section>
+
+
+    <section class="card">
+
+        <h2>Enter Password</h2>
+
+        <form method="POST">
+
+            <div class="password-box">
+
+                <input
+                    type="password"
+                    name="password"
+                    id="password"
+                    placeholder="Enter your password"
+                    required
+                    autocomplete="off"
+                >
+
+                <button
+                    type="button"
+                    id="togglePassword"
+                    class="show-button"
+                >
+                    Show
+                </button>
+
+            </div>
+
+
+            <div class="live-strength">
+
+                <div class="strength-bar">
+                    <div
+                        id="strengthBar"
+                        class="strength-fill"
+                    ></div>
+                </div>
+
+                <p id="liveText">
+                    Start typing to check strength
+                </p>
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="analyze-button"
+            >
+                Analyze Password
+            </button>
+
+        </form>
+
+    </section>
+
+
+    {% if result %}
+
+    <section class="result-section">
+
+        <div class="result-card">
+
+            <p class="result-title">
+                Overall Security
+            </p>
+
+            <div
+                class="score-circle {{ result.strength|lower }}"
+            >
+
+                <span>
+                    {{ result.score }}
+                </span>
+
+                <small>/100</small>
+
+            </div>
+
+            <h2>
+                {{ result.strength }}
+            </h2>
+
+            <p>
+                Password length:
+                <strong>{{ result.length }}</strong>
+                characters
+            </p>
+
+        </div>
+
+
+        <div class="card">
+
+            <h2>Security Checks</h2>
+
+            <div class="checks">
+
+                {% for check in result.checks %}
+
+                <div class="check {{ check.status }}">
+
+                    <div class="check-icon">
+
+                        {% if check.status == "good" %}
+                            ✓
+                        {% elif check.status == "warning" %}
+                            !
+                        {% else %}
+                            ✕
+                        {% endif %}
+
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            {{ check.name }}
+                        </strong>
+
+                        <p>
+                            {{ check.message }}
+                        </p>
+
+                    </div>
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <h2>Security Suggestions</h2>
+
+            <ul class="suggestions">
+
+                {% for suggestion in result.suggestions %}
+
+                <li>
+                    {{ suggestion }}
+                </li>
+
+                {% endfor %}
+
+            </ul>
+
+        </div>
+
+    </section>
+
+    {% endif %}
+
+
+    <section class="privacy">
+
+        <h3>Privacy</h3>
+
+        <p>
+            This application does not store submitted passwords.
+            Passwords are analyzed only while processing the request.
+        </p>
+
+    </section>
+
+</main>
+
+
+<footer>
+
+    <p>
+        Password Security Analyzer
+    </p>
+
+</footer>
+
+
+<script
+    src="{{ url_for('static', filename='script.js') }}"
+></script>
+
+</body>
+
+</html>
